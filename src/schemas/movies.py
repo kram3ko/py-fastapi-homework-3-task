@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from typing import Optional, List
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 
 from database.models.movies import MovieStatusEnum
 from schemas.examples.movies import (
@@ -21,14 +21,14 @@ class LanguageSchema(BaseModel):
     id: int
     name: str
 
-    model_config = {
-        "from_attributes": True,
-        "json_schema_extra": {
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
             "examples": [
                 language_schema_example
             ]
         }
-    }
+    )
 
 
 class CountrySchema(BaseModel):
