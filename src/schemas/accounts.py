@@ -67,12 +67,10 @@ class PasswordResetCompleteRequestSchema(UserBase):
 class TokenResponseSchema(Token):
     pass
 
+
 class TokenRefreshRequestSchema(BaseModel):
     refresh_token: str
 
 
 class TokenRefreshResponseSchema(BaseModel):
     access_token: str
-
-
-
