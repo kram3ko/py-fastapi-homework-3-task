@@ -18,7 +18,9 @@ class UserService:
             )
             group = result.scalar_one()
             hashed = hash_password(user.password)
-            db_user = UserModel(email=str(user.email), _hashed_password=hashed, group_id=group.id)
+            db_user = UserModel(
+                email=str(user.email), _hashed_password=hashed, group_id=group.id
+            )
             self.db.add(db_user)
             await self.db.commit()
             await self.db.refresh(db_user)
@@ -34,5 +36,7 @@ class UserService:
             raise
 
     async def get_user_by_email(self, email: EmailStr):
-        result = await self.db.execute(select(UserModel).where(UserModel.email == email))
+        result = await self.db.execute(
+            select(UserModel).where(UserModel.email == email)
+        )
         return result.scalar_one_or_none()
