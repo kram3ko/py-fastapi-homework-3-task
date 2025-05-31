@@ -32,7 +32,7 @@ from schemas.accounts import (
     TokenResponseSchema, PasswordResetRequestSchema, PasswordResetCompleteRequestSchema, TokenRefreshResponseSchema,
     TokenRefreshRequestSchema, UserLoginResponseSchema
 )
-from security.passwords import verify_password
+from security.passwords import hash_password
 from security.token_manager import JWTAuthManager
 
 router = APIRouter()
@@ -179,13 +179,14 @@ async def reset_password(
         raise HTTPException(status_code=400, detail="Invalid email or token.")
 
     try:
-        user.password = data.password
+        # Hash the password before saving
+        hashed_password = hash_password(data.password)
+        user._hashed_password = hashed_password
         await db.delete(token)
         await db.commit()
 
     except SQLAlchemyError:
         await db.rollback()
-
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred while resetting the password."
